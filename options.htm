@@ -63,7 +63,8 @@
 
         function save_options() {
             $('#saveError').html("&nbsp;");
-            var numRegExp = /(^-?\d\d*$)/;
+
+			var numRegExp = /(^-?\d\d*$)/;
             var t2r = $('#timeToRefresh').val();
             if (!numRegExp.test(t2r)) {
                 console.log("Bad Value for Refresh Time");
@@ -79,6 +80,18 @@
             }
         }
 
+		
+		/**
+		function test(){
+		var description = escape("Stabilité du build: 3 des 5 derniers builds ont échoué.");
+		var jobUrl = "http://localhost:8080/job/fast/25/";
+		var pictureUrl = "health-20to39.gif";
+		var jobName = "fast";
+		var buildNumber = "25"
+			var notification = webkitNotifications.createHTMLNotification("notification.htm?description="+description+"&jobUrl="+jobUrl+"&jobName="+jobName+"&pictureUrl="+pictureUrl+"&buildNumber="+buildNumber);   
+				notification.show();
+   
+		}**/
 
 		function reset(){
 			localStorage.clear();
@@ -124,14 +137,14 @@
 <div id="options">Options</div>
 <fieldset>
     <legend>Basic Setup</legend>
-    <label for="urlCI">CI URL: </label>
+    <label for="urlCI">CI URL : </label>
     <input id="urlCI" name="urlCI"/>
     <br/>
     <label for="timeToRefresh">Refresh time (ms) : </label>
     <input id="timeToRefresh"/>
     <button id="save_btn" onclick="save_options()">Save</button>
 	<button id="reset_btn" onclick="reset()">Reset</button>
-</fieldset>
+	</fieldset>
 <br/>
 
 <div id="saveError">&nbsp;</div>

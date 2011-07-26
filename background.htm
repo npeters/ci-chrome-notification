@@ -8,7 +8,7 @@
         var defaultTimeToRefresh = 10000;
         var previousState = [];
 
-        function notifyIfStatusChange(jobName, color, description, pictureUrl) {
+        function notifyIfStatusChange(jobName, color, description, pictureUrl,jobUrl,buildNumber) {
             switch (color) {
                 case 'blue':
                     description = "BUILD OK " + description;
@@ -27,8 +27,14 @@
 
 			console.log(jobName+" = "+description);
             if (previousState[jobName] != color && previousState[jobName] != null) {
-                var notification = webkitNotifications.createNotification(chrome.extension.getURL(pictureUrl), jobName, description);
-                notification.show();
+			
+				if (jobUrl){
+				var notification = webkitNotifications.createHTMLNotification("notification.htm?description="+description+"&jobUrl="+jobUrl+"&jobName="+jobName+"&pictureUrl="+pictureUrl+"&buildNumber="+buildNumber);
+				}else{
+				var notification = webkitNotifications.createNotification(chrome.extension.getURL(pictureUrl), jobName, description);
+				}
+                
+				notification.show();
             }
             previousState[jobName] = color;
         }
@@ -54,13 +60,16 @@
                             description += value.description;
 						
                         });
-						if (data.builds[0]){
-						description += "console ="+ data.builds[0].url;
+						var jobUrl = null;
+						var buildNumber = null;
+						if (data.lastBuild && data.lastBuild.url){
+							jobUrl=data.lastBuild.url;
+							buildNumber=data.lastBuild.number;
 						}
 
                         var color = data.color.replace("_anime", "");
                         console.log("updated : " + jobId + ", color : " + color);
-                        notifyIfStatusChange(jobId, color, description, data.healthReport[0] ? data.healthReport[0].iconUrl : null);
+                        notifyIfStatusChange(jobId, color, description, data.healthReport[0] ? data.healthReport[0].iconUrl : null,jobUrl,buildNumber);
                     });
                 }
             });
